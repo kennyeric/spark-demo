@@ -15,6 +15,7 @@ object StreamingFromKafka {
     val Array(zkQuorum, group, topics, numThreads) = args
     val conf = new SparkConf().setAppName("streaming kafka demo")
     val ssc = new StreamingContext(conf, Seconds(2))
+    ssc.checkpoint("checkpoint")
 
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
     val lines = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap).map(_._2)
